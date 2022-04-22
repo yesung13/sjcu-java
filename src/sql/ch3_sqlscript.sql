@@ -1,3 +1,12 @@
+-- 계정 생성
+--create user test identified by 1234;
+
+--default tablespace users
+--temporary TABLESPACE temp;
+
+--grant connect, resource, plustrace, alter session to test;
+
+
 --REM   Script: 3장 sql
 --REM   3장 SQL
 
