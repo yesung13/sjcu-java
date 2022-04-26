@@ -1,0 +1,61 @@
+-- 질의 3-12 도서를 이름순으로 검색하시오.
+SELECT *
+FROM BOOK
+ORDER BY BOOKNAME;
+
+-- 질의 3-13 도서를 가격순으로 검색하고, 가격이 같으면 이름순으로 검색하시오.
+SELECT *
+FROM BOOK
+ORDER BY PRICE, BOOKNAME;
+
+-- 질의 3-14 도서를 가격의 내림차순으로 검색하시오. 만약 가격이 같다면 출판사의 오름차순으로 검색한다.
+SELECT *
+FROM BOOK
+ORDER BY PRICE DESC, PUBLISHER ASC;
+
+-- 질의 3-15 고객이 주문한 도서의 총 판매액을 구하시오.
+SELECT SUM(SALEPRICE) AS 총매출
+FROM ORDERS;
+
+-- 질의 3-16 2번 김연아 고객이 주문한 도서의 총 판매액을 구하시오.
+SELECT SUM(SALEPRICE) AS 총매출
+FROM ORDERS
+WHERE CUSTID = 2
+
+-- 질의 3-17 고객이 주문한 도서의 총 판매액, 평균값, 최저가, 최고가를 구하시오.
+SELECT SUM(SALEPRICE) AS Total
+     , AVG(SALEPRICE) AS Average
+     , MIN(SALEPRICE) AS Minimum
+     , MAX(SALEPRICE) AS Maximum
+FROM ORDERS;
+
+-- 질의 3-18 마당서점의 도서 판매 건수를 구하시오.
+SELECT COUNT(*) AS 총건수
+FROM ORDERS;
+
+-- 집계함수
+SELECT COUNT( PUBLISHER) AS 총건수
+FROM BOOK;
+
+SELECT COUNT(DISTINCT PUBLISHER) AS 총건수
+FROM BOOK;
+
+-- 질의 3-19 고객별로 주문한 도서의 총 수량과 총 판매액을 구하시오.
+SELECT CUSTID           AS 고객번호
+     , COUNT(*)         AS 도서수량
+     , SUM(SALEPRICE)   AS 총액
+FROM ORDERS
+GROUP BY CUSTID
+
+/* 질의 3-20 가격이 8,000원 이상인 도서를 구매한 고객에 대하여 고객별 주문 도서의
+             총 수량을 구하시오. 단, 두 권 이상 구매한 고객만 구한다.*/
+
+-- 과제2  “WHERE saleprice >= 8000” 가 없다면? 결과를 예상해보고(1분), 코딩해보세요.
+
+-- 과제3 “HAVING count(*) >= 2” 가 없다면? 결과를 예상해보고(1분), 코딩해보세요
+
+-- 과제4 “SELECT *” 로 전제 속성을 본다면? 결과를 예상해보고, 코딩해보세요.
+
+-- 과제5 연습문제1) 마당서점의 고객이 요구하는 다음 질문에 대해 SQL 문을 작성하시오.
+
+-- 과제6 연습문제2) 마당서점의 운영자와 경영자가 요구하는 다음 질문에 대해 SQL 문을 작성하시오
