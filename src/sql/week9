@@ -34,28 +34,58 @@ SELECT COUNT(*) AS 총건수
 FROM ORDERS;
 
 -- 집계함수
-SELECT COUNT( PUBLISHER) AS 총건수
+SELECT COUNT(PUBLISHER) AS 총건수
 FROM BOOK;
 
 SELECT COUNT(DISTINCT PUBLISHER) AS 총건수
 FROM BOOK;
 
 -- 질의 3-19 고객별로 주문한 도서의 총 수량과 총 판매액을 구하시오.
-SELECT CUSTID           AS 고객번호
-     , COUNT(*)         AS 도서수량
-     , SUM(SALEPRICE)   AS 총액
+SELECT CUSTID         AS 고객번호
+     , COUNT(*)       AS 도서수량
+     , SUM(SALEPRICE) AS 총액
 FROM ORDERS
 GROUP BY CUSTID
 
 /* 질의 3-20 가격이 8,000원 이상인 도서를 구매한 고객에 대하여 고객별 주문 도서의
-             총 수량을 구하시오. 단, 두 권 이상 구매한 고객만 구한다.*/
+            총 수량을 구하시오. 단, 두 권 이상 구매한 고객만 구한다.*/
+SELECT CUSTID, COUNT(BOOKID) AS 총수량
+FROM ORDERS
+WHERE SALEPRICE >= 8000
+GROUP BY CUSTID
+HAVING COUNT(CUSTID) >= 2;
 
 -- 과제2  “WHERE saleprice >= 8000” 가 없다면? 결과를 예상해보고(1분), 코딩해보세요.
+SELECT CUSTID, COUNT(BOOKID) AS 총수량
+FROM ORDERS
+GROUP BY CUSTID
+HAVING COUNT(CUSTID) >= 2;
 
 -- 과제3 “HAVING count(*) >= 2” 가 없다면? 결과를 예상해보고(1분), 코딩해보세요
+SELECT CUSTID, COUNT(BOOKID) AS 총수량
+FROM ORDERS
+WHERE SALEPRICE >= 8000
+GROUP BY CUSTID;
 
 -- 과제4 “SELECT *” 로 전제 속성을 본다면? 결과를 예상해보고, 코딩해보세요.
+-- 집계 컬럼이 없어서 에러 발생한다 --> 그룹으로 묶어 놨으니까 세부 속성을 보여주지 않음
 
 -- 과제5 연습문제1) 마당서점의 고객이 요구하는 다음 질문에 대해 SQL 문을 작성하시오.
+---- 1-1) 박지성(1번 고객)의 총 구매액
+SELECT SUM(SALEPRICE) AS 총구매액
+FROM ORDERS
+WHERE CUSTID = 1;
+
+---- 1-2) 박지성 (1번 고객)이 구매한 도서의 수
+SELECT COUNT(*) AS 총구매갯수
+FROM ORDERS
+WHERE CUSTID = 1;
 
 -- 과제6 연습문제2) 마당서점의 운영자와 경영자가 요구하는 다음 질문에 대해 SQL 문을 작성하시오
+---- 2-1) 마당서점 도서의 총 개수
+SELECT COUNT(*)
+FROM  BOOK;
+
+---- 2-2) 마당서점에 도서를 출고하는 출판사의 총 개수
+SELECT COUNT(DISTINCT PUBLISHER)
+FROM BOOK;
