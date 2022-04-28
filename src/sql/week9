@@ -92,22 +92,66 @@ SELECT COUNT(DISTINCT PUBLISHER)
 FROM BOOK;
 ----------------16강---------------------------------------------
 -- 질의 3-21 고객과 고객의 주문에 관한 데이터를 모두 보이시오.
+SELECT *
+FROM CUSTOMER A,
+     ORDERS B
+WHERE A.CUSTID = B.CUSTID;
 
 -- 질의 3-22 고객과 고객의 주문에 관한 데이터를 고객번호 순으로 정렬하여 보이시오.
+SELECT *
+FROM CUSTOMER A,
+     ORDERS B
+WHERE A.CUSTID = B.CUSTID
+ORDER BY A.CUSTID;
 
 -- 질의 3-23 고객의 이름과 고객이 주문한 도서의 판매가격을 검색하시오.
+SELECT A.NAME      AS 고객명
+     , B.SALEPRICE AS 판매가격
+FROM CUSTOMER A
+   , ORDERS B
+WHERE A.CUSTID = B.CUSTID;
 
 -- 질의 3-24 고객별로 주문한 모든 도서의 총 판매액을 구하고, 고객별로 정렬하시오.
-
--- 질의 3-24 고객별로 주문한 모든 도서의 총 판매액을 구하고, 고객별로 정렬하시오.
+SELECT A.NAME
+     , SUM(B.SALEPRICE)
+FROM CUSTOMER A
+   , ORDERS B
+WHERE A.CUSTID = B.CUSTID
+GROUP BY A.NAME
+ORDER BY A.NAME;
 
 -- 과제2  연습문제1) 마당서점의 고객이 요구하는 다음 질문에 대해 SQL 문을 작성하시오.(조인 사용)
 ---- 2-3) 박지성의 총 구매액
+SELECT SUM(B.SALEPRICE)
+FROM CUSTOMER A
+   , ORDERS B
+WHERE A.CUSTID = B.CUSTID
+  AND A.NAME LIKE '박지성';
 
 ---- 2-4) 박지성이 구매한 도서의 수
+SELECT COUNT(*)
+FROM CUSTOMER A
+   , ORDERS B
+WHERE A.CUSTID = B.CUSTID
+  AND A.NAME LIKE '박지성';
 
 -- 질의 3-25 고객의 이름과 고객이 주문한 도서의 이름을 구하시오.
+SELECT A.NAME
+     , B.BOOKNAME
+FROM CUSTOMER A
+   , BOOK B
+   , ORDERS C
+WHERE A.CUSTID = C.CUSTID
+  AND B.BOOKID = C.BOOKID;
 
 -- 질의 3-26 가격이 20,000원인 도서를 주문한 고객의 이름과 도서의 이름을 구하시오.
+SELECT A.NAME
+     , B.BOOKNAME
+FROM CUSTOMER A
+   , BOOK B
+   , ORDERS C
+WHERE A.CUSTID = C.CUSTID
+  AND B.BOOKID = C.BOOKID
+  AND C.SALEPRICE = 20000;
 
 -- 질의 3-27 도서를 구매하지 않은 고객을 포함하여 고객의 이름과 고객이 주문한 도서의 판매가격을 구하시오.
