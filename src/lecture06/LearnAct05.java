@@ -1,4 +1,4 @@
-package lecture07;
+package lecture06;
 
 import java.util.Calendar;
 

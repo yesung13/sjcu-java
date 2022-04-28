@@ -1,4 +1,4 @@
-package lecture07;
+package lecture06;
 
 /**
  * Created by berno579@gmail.com on 2022/04/09
