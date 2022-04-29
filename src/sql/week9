@@ -155,3 +155,6 @@ WHERE A.CUSTID = C.CUSTID
   AND C.SALEPRICE = 20000;
 
 -- 질의 3-27 도서를 구매하지 않은 고객을 포함하여 고객의 이름과 고객이 주문한 도서의 판매가격을 구하시오.
+SELECT A.NAME
+     , B.SALEPRICE
+FROM CUSTOMER A LEFT JOIN ORDERS B ON A.CUSTID = B.CUSTID;
