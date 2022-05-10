@@ -3,6 +3,7 @@ package lecture08;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Created by berno579@gmail.com on 2022/05/06
@@ -13,8 +14,11 @@ public class FileInputStreamEx {
 
         byte b[] = new byte[6];
         try {
-            FileInputStream fin = new FileInputStream("/Users/yoonjaeseung/upload/test.out");
+//            FileInputStream fin = new FileInputStream("/Users/yoonjaeseung/upload/test.out");
+            FileInputStream fin = new FileInputStream("C:\\upload\\temp\\test.out");
             int n = 0, c;
+
+
             while ((c = fin.read()) != -1) {
                 b[n] = (byte) c;
                 n++;

@@ -12,7 +12,8 @@ public class FileOutputStreamEx {
 
         byte b[] = {7, 51, 3, 4, -1, 24};
         try {
-            FileOutputStream fout = new FileOutputStream("/Users/yoonjaeseung/upload/test.out");
+//            FileOutputStream fout = new FileOutputStream("/Users/yoonjaeseung/upload/test.out");
+            FileOutputStream fout = new FileOutputStream("C:\\upload\\temp\\test.out");
             for (int i = 0; i < b.length; i++) {
                 fout.write(b[i]);
             }
