@@ -76,26 +76,29 @@ WHERE C1.CUSTID = O1.CUSTID
 
 -- 2-2 두 개 이상의 서로 다른 출판사에서 도서를 구매한 고객의 이름
 SELECT C1.NAME
-FROM BOOK B1
-   , CUSTOMER C1
-   , ORDERS O1
-WHERE C1.CUSTID = O1.CUSTID
-  AND B1.BOOKID = O1.BOOKID
-  AND B1.PUBLISHER IN (SELECT COUNT(DISTINCT B2.publisher), B2.bookname
-                       FROM BOOK B2
-                          , CUSTOMER C2
-                          , ORDERS O2
-                       WHERE O2.CUSTID = C2.CUSTID
-                         AND B2.BOOKID = O2.BOOKID);
-
-SELECT C2.NAME, B2.publisher
-FROM BOOK B2
-   , CUSTOMER C2
-   , ORDERS O2
-WHERE O2.CUSTID = C2.CUSTID
-  AND B2.BOOKID = O2.BOOKID
-GROUP BY NAME, publisher
-;
-
+FROM CUSTOMER C1
+WHERE 2 <= (SELECT COUNT(DISTINCT B2.PUBLISHER) /*중복제거한 출판사의 수*/
+            FROM BOOK B2
+               , CUSTOMER C2
+               , ORDERS O2
+            WHERE O2.CUSTID = C2.CUSTID
+              AND B2.BOOKID = O2.BOOKID
+              AND (C2.NAME LIKE C1.NAME));
 
 -- 2-3 전체 고객의 30% 이상이 구매한 도서
+SELECT BOOKNAME
+FROM BOOK B1
+WHERE ((SELECT COUNT(B2.BOOKID)
+        FROM BOOK B2
+           , ORDERS O
+        WHERE B2.BOOKID = O.BOOKID
+          AND B2.BOOKID = B1.BOOKID) >= 0.3 * (SELECT COUNT(*) FROM CUSTOMER));
+
+-- 2-3-1 전체 고객의 30% 이하가 구매한 도서
+SELECT BOOKNAME
+FROM BOOK B1
+WHERE ((SELECT COUNT(B2.BOOKID)
+        FROM BOOK B2
+           , ORDERS O
+        WHERE B2.BOOKID = O.BOOKID
+          AND B2.BOOKID = B1.BOOKID) <= 0.3 * (SELECT COUNT(*) FROM CUSTOMER));
