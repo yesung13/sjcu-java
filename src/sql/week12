@@ -1,0 +1,158 @@
+/*----------------21강---------------------------------------------*/
+/*
+ 질의 3-34 다음과 같은 속성을 가진 NEWBOOK 테이블을 생성하시오. 정수형은 NUMBER를 사용하며
+문자형은 가변형 문자타입인 VARCHAR을 사용한다.
+• BOOKID(도서번호) - NUMBER
+• BOOKNAME(도서이름) - VARCHAR(20)
+• PUBLISHER(출판사) - VARCHAR(20)
+• PRICE(가격) - NUMBER
+ */
+
+CREATE TABLE NEWBOOK
+(
+    BOOKID    NUMBER PRIMARY KEY,
+    BOOKNAME  VARCHAR(20),
+    PUBLISHER VARCHAR(20),
+    PRICE     NUMBER
+--     , PRIMARY KEY (BOOKID)
+);
+
+-- 복합키 지정
+CREATE TABLE NEWBOOK
+(
+    BOOKNAME  VARCHAR(20) NOT NULL,
+    PUBLISHER VARCHAR(20) UNIQUE,
+    PRICE     NUMBER DEFAULT 10000 CHECK (PRICE > 1000),
+    PRIMARY KEY (BOOKNAME, PUBLISHER)
+);
+
+/*
+ 질의 3-35 다음과 같은 속성을 가진 NewCustomer 테이블을 생성하시오.
+• custid(고객번호) - NUMBER, 기본키
+• name(이름) - VARCHAR(40)
+• address(주소) - VARCHAR(40)
+• phone(전화번호) - VARCHAR(30)
+ */
+
+CREATE TABLE NewCustomer
+(
+    custid  NUMBER PRIMARY KEY,
+    name    VARCHAR(40),
+    address VARCHAR(40),
+    phone   VARCHAR(30)
+);
+
+/*
+ 질의 3-36 다음과 같은 속성을 가진 NewOrders 테이블을 생성하시오.
+• orderid(주문번호) - NUMBER, 기본키
+• custid(고객번호) - NUMBER, NOT NULL 제약조건, 외래키(NewCustomer.custid, 연쇄삭제)
+• bookid(도서번호) - NUMBER, NOT NULL 제약조건
+• saleprice(판매가격) - NUMBER
+• orderdate(판매일자) - DATE
+ */
+
+CREATE TABLE NewOrders
+(
+    orderid   NUMBER,
+    custid    NUMBER NOT NULL,
+    bookid    NUMBER NOT NULL,
+    saleprice NUMBER,
+    orderdate DATE,
+    PRIMARY KEY (orderid),
+    FOREIGN KEY (custid) REFERENCES NewCustomer (custid) ON DELETE CASCADE
+);
+
+-- 질의 3-37 NewBook 테이블에 VARCHAR(13)의 자료형을 가진 isbn 속성을 추가하시오.
+ALTER TABLE NEWBOOK
+    ADD ISBN VARCHAR(13);
+
+-- 질의 3-38 NewBook 테이블의 isbn 속성의 데이터 타입을 NUMBER형으로 변경하시오.
+ALTER TABLE NEWBOOK
+    MODIFY ISBN NUMBER;
+
+-- 질의 3-39 NewBook 테이블의 isbn 속성을 삭제하시오.
+ALTER TABLE NEWBOOK
+    DROP COLUMN ISBN;
+
+-- 질의 3-40 NewBook 테이블의 bookid 속성에 NOT NULL 제약조건을 적용하시오.
+ALTER TABLE NEWBOOK
+    MODIFY BOOKID NUMBER NOT NULL;
+
+-- 질의 3-41 NewBook 테이블의 bookid 속성을 기본키로 변경하시오.
+ALTER TABLE NewBook
+    ADD PRIMARY KEY (bookid);
+
+-- 질의 3-42 NewBook 테이블을 삭제하시요.
+DROP TABLE NEWBOOK;
+
+/*
+ 질의 3-43 NewCustomer 테이블을 삭제하시오.
+ 만약 삭제가 거절된다면 원인을 파악하고 관련된 테이블을 같이 삭제하시오.
+ (NewOrders 테이블이 NewCustomer를 참조하고 있음)
+ */
+DROP TABLE NEWORDERS;
+DROP TABLE NEWCUSTOMER;
+
+/*----------------22강---------------------------------------------*/
+/*
+질의 3-44 Book 테이블에 새로운 도서 ‘스포츠 의학’을 삽입하시오.
+스포츠 의학은 한솔의학서적에서 출간했으며 가격은 90,000원이다.
+ */
+INSERT INTO BOOK (BOOKID, BOOKNAME, PUBLISHER, PRICE)
+VALUES (11, '스포츠 의학', '한솔의학서적', 90000);
+
+/*
+질의 3-45 Book 테이블에 새로운 도서 ‘스포츠 의학’을 삽입하시오.
+스포츠 의학은 한솔의학서적에서 출간했으며 가격은 미정이다
+ */
+INSERT INTO BOOK (BOOKID, BOOKNAME, PUBLISHER)
+VALUES (12, '스포츠 의학', '한솔의학서적');
+
+/*
+질의 3-46 수입도서 목록(Imported_book)을 Book 테이블에 모두 삽입하시오.
+(Imported_book 테이블은 스크립트 Book 테이블과 같이 이미 만들어져 있음)
+ */
+INSERT INTO BOOK(BOOKID, BOOKNAME, PRICE, PUBLISHER)
+SELECT BOOKID, BOOKNAME, PRICE, PUBLISHER
+FROM IMPORTED_BOOK;
+
+-- 질의 3-47 Customer 테이블에서 고객번호가 5인 고객의 주소를 ‘대한민국 부산’으로 변경하시오.
+UPDATE Customer
+SET address='대한민국 부산'
+WHERE custid = 5;
+
+-- 질의 3-48 Customer 테이블에서 박세리 고객의 주소를 김연아 고객의 주소로 변경하시오.
+UPDATE Customer
+SET address = (SELECT address
+               FROM Customer
+               WHERE name = '김연아')
+WHERE name = '박세리';
+
+-- 질의 3-49 Customer 테이블에서 고객번호가 5인 고객을 삭제하시오.
+DELETE
+FROM CUSTOMER
+WHERE CUSTID = 5;
+
+-- 질의 3-50 모든 고객을 삭제하시오.
+DELETE
+FROM CUSTOMER;
+---- 과제2
+---- Customer.custid=5는 Orders에서 어떤 투플도 참조하고 있지 않다.
+
+-- 연습1-1 새로운 도서 (‘스포츠 세계’, ‘대한미디어’, 10000원)이 마당서점에
+-- 입고되었다. 삽입이 안 될 경우 필요한 데이터가 더 있는지 찾아보자.
+INSERT INTO BOOK VALUES(11, '스포츠 세계', '대한미디어', 10000);
+
+-- 연습1-2 ‘삼성당’에서 출판한 도서를 삭제해야 한다.
+DELETE FROM Book WHERE publisher LIKE '삼성당';
+
+-- 연습1-3 이상미디어’에서 출판한 도서를 삭제해야 한다. 삭제가 안 될 경우 원인을 생각해보자.
+DELETE
+FROM BOOK
+WHERE PUBLISHER = '이상미디어';
+-- 이상미디어는 Orders에서 외래키로 사용 되고 있음, 삭제 불가능
+
+-- 연습1-4 출판사 ‘대한미디어’가 ‘대한출판사’로 이름을 바꾸었다.
+UPDATE BOOK
+SET PUBLISHER ='대한출판사'
+WHERE PUBLISHER = '대한미디어';
