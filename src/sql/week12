@@ -7,10 +7,9 @@
 • PUBLISHER(출판사) - VARCHAR(20)
 • PRICE(가격) - NUMBER
  */
-
 CREATE TABLE NEWBOOK
 (
-    BOOKID    NUMBER PRIMARY KEY,
+    BOOKID    NUMBER,
     BOOKNAME  VARCHAR(20),
     PUBLISHER VARCHAR(20),
     PRICE     NUMBER
@@ -63,24 +62,19 @@ CREATE TABLE NewOrders
 );
 
 -- 질의 3-37 NewBook 테이블에 VARCHAR(13)의 자료형을 가진 isbn 속성을 추가하시오.
-ALTER TABLE NEWBOOK
-    ADD ISBN VARCHAR(13);
+ALTER TABLE NEWBOOK ADD ISBN VARCHAR(13);
 
 -- 질의 3-38 NewBook 테이블의 isbn 속성의 데이터 타입을 NUMBER형으로 변경하시오.
-ALTER TABLE NEWBOOK
-    MODIFY ISBN NUMBER;
+ALTER TABLE NEWBOOK MODIFY ISBN NUMBER;
 
 -- 질의 3-39 NewBook 테이블의 isbn 속성을 삭제하시오.
-ALTER TABLE NEWBOOK
-    DROP COLUMN ISBN;
+ALTER TABLE NEWBOOK DROP COLUMN ISBN;
 
 -- 질의 3-40 NewBook 테이블의 bookid 속성에 NOT NULL 제약조건을 적용하시오.
-ALTER TABLE NEWBOOK
-    MODIFY BOOKID NUMBER NOT NULL;
+ALTER TABLE NEWBOOK MODIFY BOOKID NUMBER NOT NULL;
 
 -- 질의 3-41 NewBook 테이블의 bookid 속성을 기본키로 변경하시오.
-ALTER TABLE NewBook
-    ADD PRIMARY KEY (bookid);
+ALTER TABLE NewBook ADD PRIMARY KEY (bookid);
 
 -- 질의 3-42 NewBook 테이블을 삭제하시요.
 DROP TABLE NEWBOOK;
@@ -96,7 +90,7 @@ DROP TABLE NEWCUSTOMER;
 /*----------------22강---------------------------------------------*/
 /*
 질의 3-44 Book 테이블에 새로운 도서 ‘스포츠 의학’을 삽입하시오.
-스포츠 의학은 한솔의학서적에서 출간했으며 가격은 90,000원이다.
+스포츠 의학은 한솔의학서적에서 출간했으며 가격은 90,000원이다.(실습제외)
  */
 INSERT INTO BOOK (BOOKID, BOOKNAME, PUBLISHER, PRICE)
 VALUES (11, '스포츠 의학', '한솔의학서적', 90000);
@@ -137,14 +131,18 @@ WHERE CUSTID = 5;
 DELETE
 FROM CUSTOMER;
 ---- 과제2
----- Customer.custid=5는 Orders에서 어떤 투플도 참조하고 있지 않다.
+---- 3-49는 Customer.custid=5는 Orders에서 어떤 투플도 참조하고 있지 않아서 삭제가 가능했고,
+---- 3-50 모든 고객을 삭제하는데 custid=5를 제외하고는 다른 투플에 참조되어 삭제 불가능하다.
 
 -- 연습1-1 새로운 도서 (‘스포츠 세계’, ‘대한미디어’, 10000원)이 마당서점에
 -- 입고되었다. 삽입이 안 될 경우 필요한 데이터가 더 있는지 찾아보자.
-INSERT INTO BOOK VALUES(11, '스포츠 세계', '대한미디어', 10000);
+INSERT INTO BOOK
+VALUES (11, '스포츠 세계', '대한미디어', 10000);
 
 -- 연습1-2 ‘삼성당’에서 출판한 도서를 삭제해야 한다.
-DELETE FROM Book WHERE publisher LIKE '삼성당';
+DELETE
+FROM Book
+WHERE publisher LIKE '삼성당';
 
 -- 연습1-3 이상미디어’에서 출판한 도서를 삭제해야 한다. 삭제가 안 될 경우 원인을 생각해보자.
 DELETE
