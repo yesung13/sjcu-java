@@ -4,15 +4,15 @@ start() {
   login
 }
 function login() {
-    read -sp "자판기를 실행하려면 패스워드를 입력하세요 : " pw
-    echo
-    if [ ${pw} -eq 20932172 ]; then
-        init
-        vendingMachine
-    else
-      echo -e "\n패스워드가 틀렸습니다. 종료합니다."
-      return 1
-    fi
+  read -rsp "자판기를 실행하려면 패스워드를 입력하세요 : " pw
+  echo
+  if [ "${pw}" -eq 20932172 ]; then
+      init
+      vendingMachine
+  else
+    echo -e "\n패스워드가 틀렸습니다. 종료합니다."
+    return 1
+  fi
 }
 
 function init() {
@@ -48,14 +48,14 @@ function vendingMachine() {
     echo -e "\t\t\t[자판기]"
 
     for ((i = 0; i < ${#menuNms[@]}; i++)); do
-      echo -n -e "$((${i} + 1)).${menuNms[i]} ${prices[i]}원\t"
+      echo -n -e $((i + 1))".${menuNms[i]} ${prices[i]}원\t"
       ((rn[i] = i + 1))
     done
 
     echo -e "\n============================================================"
 
     echo -n -e "금액을 입력하세요 : " # -n:줄바꿈 사용 안함 -e:이스케이프 문자 사용
-    read input
+    read -r input
     pay=input
 
     if [ ${pay} -eq -1 ]; then
@@ -64,7 +64,7 @@ function vendingMachine() {
     fi
 
     echo -n -e "메뉴를 선택하세요 : "
-    read num
+    read -r num
     menuNum=num
 
     if [ ${menuNum} -le 0 ] || [ ${menuNum} -ge ${#rn[@]} ]; then
@@ -74,7 +74,7 @@ function vendingMachine() {
 
     #돈이 충분한가?
     #if [ ${pay} >= ${prices[${menuNum-1}]} ]; then
-    if ((${pay} >= ${prices[menuNum - 1]})); then
+    if ((pay >= prices[menuNum - 1])); then
       let charge=${pay}-${prices[menuNum - 1]}
 
       echo -e "잔돈 : ${charge}"
