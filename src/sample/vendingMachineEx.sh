@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
-#20932172 윤예성
+# 자판기 예제 샘플
 start() {
+  #  login
   init
   vendingMachine
+}
+function login() {
+  read -rsp "자판기를 실행하려면 패스워드를 입력하세요 : " pw
+  echo
+  if [ "${pw}" -eq 20932172 ]; then
+    init
+    vendingMachine
+  else
+    echo -e "\n패스워드가 틀렸습니다. 종료합니다."
+    return 1
+  fi
 }
 
 function init() {
@@ -15,14 +27,15 @@ function init() {
 
   # 자판기 지폐/동전 수 배열 정의
   moneyCnt[0]=5
-  moneyCnt[1]=10
-  moneyCnt[2]=10
+  moneyCnt[1]=5
+  moneyCnt[2]=5
   moneyCnt[3]=10
   moneyCnt[4]=30
 }
 
 # 잔돈 생성 함수
 function setCharge() {
+
   local pay=$1
   local menuNum=$2
 
@@ -33,23 +46,20 @@ function setCharge() {
 function getCharge() {
   local charge=$1
 
+  echo -n ">> "
   for ((i = 0; i < ${#moneyBox[@]}; i++)); do
-    local reCharge=${charge}
 
-    let coin=${charge}/${moneyBox[i]}
+    let coin=${charge}/${moneyBox[i]} # 잔돈 갯수
     ((charge %= moneyBox[i]))
     ((residualCoin = moneyCnt[i] - coin)) # residualCoin: 잔여코인 변수
 
-    if ((moneyCnt[i] < coin && coin != 0)); then
-      echo "loading 1"
-      let re=${reCharge}/${moneyBox[i + 1]}
-      ((reCharge %= moneyBox[i + 1]))
-      echo -n -e "${moneyBox[i]}원: ${re}개/잔여:${residualCoin}개 "
+    if ((moneyCnt[i] < 0 || moneyCnt[i] < coin)); then
+      echo -e "[${moneyBox[i]}]원이 $((coin-moneyCnt[i]))개 부족합니다. 관리자에게 문의하세요."
     fi
 
     if ((moneyCnt[i] >= coin && coin != 0)); then
-      echo "loading 2"
-      echo -n -e "${moneyBox[i]}원: ${coin}개/잔여:${residualCoin}개 "
+      echo -n -e "[${moneyBox[i]}]원: ${coin}개 "
+      moneyCnt[i]=${residualCoin} # 자판기 잔액 변경(잔여코인 갯수로 값 변경)
     fi
 
   done
@@ -70,17 +80,20 @@ function vendingMachine() {
 
     echo "============================================================"
     echo -e "\t\t\t[자판기]"
-
     for ((i = 0; i < ${#menuNms[@]}; i++)); do
       echo -n -e $((i + 1))".${menuNms[i]} ${prices[i]}원\t"
       ((rn[i] = i + 1))
     done
-
     echo -e "\n============================================================"
 
     echo -n -e "금액을 입력하세요 : " # -n:줄바꿈 사용 안함 -e:이스케이프 문자 사용
     read -r input
     pay=input
+
+    #    if [ ${pay} -eq -1 ]; then
+    #      echo "종료"
+    #      break
+    #    fi
 
     echo -n -e "메뉴를 선택하세요 : "
     read -r num
@@ -92,14 +105,22 @@ function vendingMachine() {
     fi
 
     #돈이 충분한가?
+    #if [ ${pay} >= ${prices[${menuNum-1}]} ]; then
     if ((pay >= prices[menuNum - 1])); then
       setCharge $pay $menuNum # 지불한 금액으로 잔돈 생성하여 출력
       getCharge $charge       # 잔돈 계산하여 출력
       echo
 
     else
-      echo -e "\n잔액이 부족합니다!"
+      echo -e "\n금액이 부족합니다!"
     fi
+
+    echo "자판기 잔액 현황"
+    echo -n ">> "
+    for ((i = 0; i < ${#moneyCnt[@]}; i++)); do
+      echo -n "[${moneyBox[i]}]원: ${moneyCnt[i]}개 "
+    done
+    echo
 
   done
 }
