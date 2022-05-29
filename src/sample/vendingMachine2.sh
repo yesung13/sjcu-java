@@ -114,6 +114,8 @@ function vendingMachine() {
       echo -e "\n금액이 부족합니다!"
     fi
 
+
+
   done
 }
 
